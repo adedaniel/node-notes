@@ -1,11 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+require("express-async-errors");
 const authorize = require("./middleware/authorize");
 const notes = require("./routes/notes");
 const auth = require("./routes/auth");
 const connectDB = require("./db/connect");
 const notFound = require("./middleware/404");
+const errorMiddleware = require("./middleware/error-handler");
 const app = express();
 require("dotenv").config();
 
@@ -20,6 +22,7 @@ app.use("/api/v1/notes", notes);
 app.use("/api/v1/auth", auth);
 
 app.use(notFound);
+app.use(errorMiddleware);
 
 app.get("/", (req, res) => {
   res.send("Home page!!!!!");

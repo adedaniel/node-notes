@@ -1,10 +1,41 @@
 const asyncWrapper = require("../middleware/async");
 const Note = require("../models/Note");
 
-const getAllNotes = asyncWrapper(async (req, res) => {
-  const notes = await Note.find({});
-  return res.status(200).json(notes);
-});
+const getAllNotes = async (req, res) => {
+  const { featured, type, keyword, sort } = req.query;
+  const queryObject = {};
+
+  if (featured) {
+    queryObject.featured = featured === "true";
+  }
+
+  if (type) {
+    queryObject.type = type;
+  }
+
+  if (keyword) {
+    queryObject.$or = [
+      { title: { $regex: keyword, $options: "i" } },
+      { content: { $regex: keyword, $options: "i" } },
+    ];
+  }
+
+  let result = Note.find(queryObject);
+
+  if (sort) {
+    result = result.sort(sort.split(",").join(" "));
+  } else {
+    result = result.sort("createdAt");
+  }
+
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+
+  result = result.skip(Number((page - 1) * limit)).limit(limit);
+
+  const notes = await result;
+  return res.status(200).json(notes /*total: notes.length*/);
+};
 
 const getSingleNote = async (req, res) => {
   try {
@@ -45,7 +76,7 @@ const updateNote = async (req, res) => {
     if (!noteToUpdate)
       return res.status(404).json({ error: `No record found` });
 
-    return res.status(201).json(noteToUpdate);
+    return res.status(204).json(noteToUpdate);
   } catch (error) {
     res.status(500).json(error);
   }
