@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 require("express-async-errors");
-const authorize = require("./middleware/authorize");
 const notes = require("./routes/notes");
 const auth = require("./routes/auth");
 const connectDB = require("./db/connect");
@@ -15,7 +14,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
-app.use(authorize);
 app.use(express.static("public"));
 
 app.use("/api/v1/notes", notes);

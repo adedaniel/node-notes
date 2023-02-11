@@ -1,20 +1,23 @@
 const express = require("express");
 const { nanoid } = require("nanoid");
+const jwt = require("jsonwebtoken");
+const { CustomAPIError } = require("../errors");
 
 const router = express.Router();
 
 // sample functionality for login authentication
 router.post("/login", (req, res) => {
-  try {
-    if (req.body.username) {
-      const loggedInUser = { id: nanoid(), username: req.body.username };
-      return res.status(200).json(loggedInUser);
-    }
-
-    res.status(400).json({ error: "Invalid username provided" });
-  } catch (error) {
-    res.json(error);
+  const { email, password } = req.body;
+  if (!email || !password) {
+    throw new CustomAPIError(400, "Invalid email or password provided");
   }
+
+  const token = jwt.sign({ id: nanoid(), email }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+
+  const loggedInUser = { id: nanoid(), email };
+  return res.status(200).json({ user: loggedInUser, token });
 });
 
 module.exports = router;
