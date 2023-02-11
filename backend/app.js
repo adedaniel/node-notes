@@ -7,6 +7,7 @@ const auth = require("./routes/auth");
 const connectDB = require("./db/connect");
 const notFound = require("./middleware/404");
 const errorMiddleware = require("./middleware/error-handler");
+const authenticate = require("./middleware/auth");
 const app = express();
 require("dotenv").config();
 
@@ -16,8 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
 app.use(express.static("public"));
 
-app.use("/api/v1/notes", notes);
 app.use("/api/v1/auth", auth);
+app.use("/api/v1/notes", authenticate, notes);
 
 app.use(notFound);
 app.use(errorMiddleware);

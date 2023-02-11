@@ -1,8 +1,8 @@
 const { CustomAPIError } = require("../errors");
-const asyncWrapper = require("../middleware/async");
 const Note = require("../models/Note");
 
 const getAllNotes = async (req, res) => {
+  console.log(req.user);
   const { featured, type, keyword, sort } = req.query;
   const queryObject = {};
 

@@ -6,14 +6,13 @@ const {
   updateNote,
   deleteNote,
 } = require("../controllers/notes");
-const authenticate = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/", authenticate, getAllNotes);
-router.get("/:noteId", authenticate, getSingleNote);
-router.post("/", authenticate, createNote);
-router.patch("/:noteId", authenticate, updateNote);
-router.delete("/:noteId", authenticate, deleteNote);
+router.get("/", getAllNotes);
+router.get("/:noteId", getSingleNote);
+router.post("/", createNote);
+router.patch("/:noteId", updateNote);
+router.delete("/:noteId", deleteNote);
 
 module.exports = router;

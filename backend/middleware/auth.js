@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 const { CustomAPIError } = require("../errors");
 
-const authenticate = (req, res, next) => {
+const authenticate = async (req, res, next) => {
   try {
     const decoded = jwt.verify(
       req.headers.authorization?.split(" ")[1],
@@ -13,7 +14,6 @@ const authenticate = (req, res, next) => {
     next();
   } catch (error) {
     throw new CustomAPIError(401, "Unauthenticated. Please login again.");
-    // return res.status(401).json({ error: "Unauthenticated" });
   }
 };
 
