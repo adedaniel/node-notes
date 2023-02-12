@@ -19,12 +19,14 @@ const loginUser = async (req, res) => {
   }
 
   const token = user.createJWT();
+  user.password = undefined;
   return res.status(StatusCodes.OK).json({ user, token });
 };
 
 const registerUser = async (req, res) => {
   const newUser = await User.create(req.body);
   const token = newUser.createJWT();
+  newUser.password = undefined;
 
   return res.status(StatusCodes.CREATED).json({ user: newUser, token });
 };

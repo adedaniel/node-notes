@@ -1,10 +1,10 @@
+const { StatusCodes } = require("http-status-codes");
 const { CustomAPIError } = require("../errors");
 const Note = require("../models/Note");
 
 const getAllNotes = async (req, res) => {
-  console.log(req.user);
   const { featured, type, keyword, sort } = req.query;
-  const queryObject = {};
+  const queryObject = { createdBy: req.user.id };
 
   if (featured) {
     queryObject.featured = featured === "true";
@@ -35,29 +35,33 @@ const getAllNotes = async (req, res) => {
   result = result.skip(Number((page - 1) * limit)).limit(limit);
 
   const notes = await result;
-  return res.status(200).json(notes /*total: notes.length*/);
+  return res.status(StatusCodes.OK).json(notes /*total: notes.length*/);
 };
 
 const getSingleNote = async (req, res) => {
-  const noteToFind = await Note.findById(req.params.noteId);
+  const noteToFind = await Note.findOne({
+    _id: req.params.noteId,
+    createdBy: req.user.id,
+  });
 
   if (!noteToFind)
     throw new CustomAPIError(
-      404,
+      StatusCodes.NOT_FOUND,
       `No note found with id: ${req.params.noteId}`
     );
 
-  return res.status(200).json(noteToFind);
+  return res.status(StatusCodes.OK).json(noteToFind);
 };
 
 const createNote = async (req, res) => {
+  req.body.createdBy = req.user.id;
   const newNote = await Note.create(req.body);
-  return res.status(201).json(newNote);
+  return res.status(StatusCodes.CREATED).json(newNote);
 };
 
 const updateNote = async (req, res) => {
-  const noteToUpdate = await Note.findByIdAndUpdate(
-    req.params.noteId,
+  const noteToUpdate = await Note.findOneAndUpdate(
+    { _id: req.params.noteId, createdBy: req.user.id },
     req.body,
     {
       new: true,
@@ -72,11 +76,14 @@ const updateNote = async (req, res) => {
 };
 
 const deleteNote = async (req, res) => {
-  const noteToDelete = await Note.findByIdAndDelete(req.params.noteId);
+  const noteToDelete = await Note.findOneAndDelete({
+    _id: req.params.noteId,
+    createdBy: req.user.id,
+  });
 
   if (!noteToDelete) throw new CustomAPIError(404, `No record found`);
 
-  return res.status(200).json({ id: req.params.noteId });
+  return res.status(200).json({ deletedId: req.params.noteId });
 };
 
 module.exports = {
