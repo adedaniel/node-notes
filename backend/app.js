@@ -1,5 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const rateLimiter = require("express-rate-limit");
 const morgan = require("morgan");
 require("express-async-errors");
 const notes = require("./routes/notes");
@@ -22,6 +25,17 @@ app.use("/api/v1/notes", authenticate, notes);
 
 app.use(notFound);
 app.use(errorMiddleware);
+app.use(helmet());
+app.use(xss());
+
+app.set("trust proxy", 1);
+
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Home page!!!!!");
