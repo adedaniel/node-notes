@@ -38,10 +38,10 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Home page!!!!!");
+  res.send("Node-notes Home page!!!!!!!");
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 
 const startServer = async () => {
   try {
