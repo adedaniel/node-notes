@@ -38,7 +38,7 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Node-notes Home page!!!!!!!");
+  res.send("Node notes Home page!!!!!!!");
 });
 
 const port = process.env.PORT || 8080;

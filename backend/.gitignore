@@ -25,6 +25,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# fly configs
+fly.toml
+
 # vercel
 .vercel
 

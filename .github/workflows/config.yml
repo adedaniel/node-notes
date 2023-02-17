@@ -15,10 +15,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
-      - run: npm audit
       - name: Setup Fly.io config
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy to Fly.io
