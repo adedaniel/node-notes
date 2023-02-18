@@ -1,0 +1,255 @@
+openapi: 3.0.0
+info:
+  title: Notes API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://node-notes-api.fly.dev/api/v1
+  variables: {}
+paths:
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Login a user
+      operationId: Loginauser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/LoginauserRequest'
+              - example:
+                  email: adetoladaniel693@gmail.com
+                  password: dddddddd
+            example:
+              email: adetoladaniel693@gmail.com
+              password: dddddddd
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/register:
+    post:
+      tags:
+      - Auth
+      summary: Register a user
+      operationId: Registerauser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/RegisterauserRequest'
+              - example:
+                  firstName: Daniel
+                  lastName: Adetola
+                  email: adetoladaniel693@gmail.com
+                  password: dddddddd
+            example:
+              firstName: Daniel
+              lastName: Adetola
+              email: adetoladaniel693@gmail.com
+              password: dddddddd
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /notes:
+    get:
+      tags:
+      - Notes
+      summary: Get notes
+      operationId: Getnotes
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    post:
+      tags:
+      - Notes
+      summary: Create a note
+      operationId: Createanote
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/CreateanoteRequest'
+              - example:
+                  title: Model.hydrate()
+                  type: note
+                  featured: false
+                  content: "This helps prevent accidentally overwriting your document with { name: 'jason bourne' }. To prevent this behaviour, see the overwrite option"
+            example:
+              title: Model.hydrate()
+              type: note
+              featured: false
+              content: "This helps prevent accidentally overwriting your document with { name: 'jason bourne' }. To prevent this behaviour, see the overwrite option"
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /notes/{id}:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The single job ID
+    get:
+      tags:
+      - Notes
+      summary: Get single note
+      operationId: Getsinglenote
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    patch:
+      tags:
+      - Notes
+      summary: Update note
+      operationId: Updatenote
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdatenoteRequest'
+              - example:
+                  title: Good title
+                  type: task
+            example:
+              title: Good title
+              type: task
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    delete:
+      tags:
+      - Notes
+      summary: Delete note
+      operationId: Deletenote
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+components:
+  schemas:
+    LoginauserRequest:
+      title: LoginauserRequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: adetoladaniel693@gmail.com
+        password: dddddddd
+    RegisterauserRequest:
+      title: RegisterauserRequest
+      required:
+      - firstName
+      - lastName
+      - email
+      - password
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        firstName: Daniel
+        lastName: Adetola
+        email: adetoladaniel693@gmail.com
+        password: dddddddd
+    CreateanoteRequest:
+      title: CreateanoteRequest
+      required:
+      - title
+      - type
+      - featured
+      - content
+      type: object
+      properties:
+        title:
+          type: string
+        type:
+          type: string
+        featured:
+          type: boolean
+        content:
+          type: string
+      example:
+        title: Model.hydrate()
+        type: note
+        featured: false
+        content: "This helps prevent accidentally overwriting your document with { name: 'jason bourne' }. To prevent this behaviour, see the overwrite option"
+    UpdatenoteRequest:
+      title: UpdatenoteRequest
+      required:
+      - title
+      - type
+      type: object
+      properties:
+        title:
+          type: string
+        type:
+          type: string
+      example:
+        title: Good title
+        type: task
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+- name: Auth
+- name: Notes

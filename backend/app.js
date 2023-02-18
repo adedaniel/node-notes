@@ -27,6 +27,14 @@ app.use(express.static("public"));
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/notes", authenticate, notes);
 
+app.get("/", (req, res) => {
+  res.send(
+    "<h1>Node-notes API</h1><br/> <a href='/docs'>View Documentation</a>"
+  );
+});
+
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
 app.use(notFound);
 app.use(errorMiddleware);
 app.use(helmet());
@@ -40,14 +48,6 @@ app.use(
     max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   })
 );
-
-app.get("/", (req, res) => {
-  res.send(
-    "<h1>Node-notes API</h1><br/> <a href='/docs'>View Documentation</a>"
-  );
-});
-
-app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 const port = process.env.PORT || 8080;
 
