@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const rateLimiter = require("express-rate-limit");
@@ -13,6 +15,8 @@ const errorMiddleware = require("./middleware/error-handler");
 const authenticate = require("./middleware/auth");
 const app = express();
 require("dotenv").config();
+
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 app.use(cors());
 app.use(express.json());
@@ -38,8 +42,12 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.send("Node notes Home page!!!!!!!");
+  res.send(
+    "<h1>Node-notes API</h1><br/> <a href='/docs'>View Documentation</a>"
+  );
 });
+
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 const port = process.env.PORT || 8080;
 
