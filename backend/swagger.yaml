@@ -5,6 +5,7 @@ info:
   version: '1.0'
 servers:
 - url: https://node-notes-api.fly.dev/api/v1
+- url: http://localhost:8080/api/v1
   variables: {}
 paths:
   /auth/login:
