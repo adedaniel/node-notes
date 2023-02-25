@@ -1,13 +1,14 @@
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { getNotes } from "../utils/api";
 import { useQuery } from "react-query";
 import { AiOutlineStar } from "react-icons/ai";
 import classNames from "classnames";
 import debounce from "lodash.debounce";
+import { getNotes } from "../utils/api";
+import PageLoadAnimation from "../components/PageLoadAnimation";
 
-const Index = (props) => {
+const Index = () => {
   const [showFeatured, setShowFeatured] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -18,9 +19,11 @@ const Index = (props) => {
     [query]
   );
 
-  const { data: notes } = useQuery(["notes", showFeatured, query], getNotes, {
-    initialData: props.notes,
-  });
+  const { data: notes } = useQuery(["notes", showFeatured, query], getNotes);
+
+  if (!notes) {
+    return <PageLoadAnimation />;
+  }
 
   return (
     <div className="w-full flex justify-center py-10 px-[5%] pt-40">
@@ -78,13 +81,13 @@ const Index = (props) => {
   );
 };
 
-export async function getServerSideProps() {
-  try {
-    const data = await getNotes();
-    return { props: { notes: data } };
-  } catch (error) {
-    throw new Error(error);
-  }
-}
+// export async function getServerSideProps() {
+//   try {
+//     const data = await getNotes();
+//     return { props: { notes: data } };
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+// }
 
 export default Index;

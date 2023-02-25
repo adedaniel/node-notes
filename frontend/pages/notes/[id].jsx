@@ -3,26 +3,33 @@ import Link from "next/link";
 import React, { useCallback } from "react";
 import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
-
-import { getNoteDetails, updateNote } from "../../utils/api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
+import { getNoteDetails, updateNote } from "../../utils/api";
+import { redirect } from "next/navigation";
+import PageLoadAnimation from "../../components/PageLoadAnimation";
 
-const EachNote = (props) => {
+const EachNote = () => {
   const queryClient = useQueryClient();
-  const { query } = useRouter();
+  const { query, push } = useRouter();
 
   const { data: note } = useQuery(
     ["note", query?.id],
     () => getNoteDetails(query?.id),
     {
-      initialData: props.note,
+      enabled: !!query?.id,
+      onError: ({ response }) => {
+        if (response?.status === 404) {
+          redirect("/login");
+        }
+        alert(response?.data?.message);
+      },
     }
   );
 
   const { mutate, mutateAsync } = useMutation(updateNote, {
-    onError: (error) => {
-      alert("Unable to access server. Try again later");
+    onError: ({ response }) => {
+      alert(response?.data?.message);
     },
     onSuccess: (data, variables) => {
       queryClient.setQueryData(["note", { id: variables.noteId }], data);
@@ -48,6 +55,10 @@ const EachNote = (props) => {
       console.error(error);
     }
   };
+
+  if (!note) {
+    return <PageLoadAnimation />;
+  }
 
   return (
     <div className="w-full flex justify-center py-10 px-[5%] pt-20">
@@ -103,13 +114,13 @@ const EachNote = (props) => {
   );
 };
 
-export async function getServerSideProps(context) {
-  try {
-    const data = await getNoteDetails(context.query?.id);
-    return { props: { note: data } };
-  } catch (error) {
-    return { notFound: true };
-  }
-}
+// export async function getServerSideProps(context) {
+//   try {
+//     const data = await getNoteDetails(context.query?.id);
+//     return { props: { note: data } };
+//   } catch (error) {
+//     return { notFound: true };
+//   }
+// }
 
 export default EachNote;

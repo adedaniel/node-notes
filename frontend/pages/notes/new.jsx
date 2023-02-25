@@ -11,8 +11,8 @@ export default function NewNote() {
     onSuccess: () => {
       Router.push("/");
     },
-    onError: (error) => {
-      alert("Unable to access server. Try again later");
+    onError: ({ response }) => {
+      alert(response?.data?.message);
     },
   });
 
