@@ -6,7 +6,6 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import { getNoteDetails, updateNote } from "../../utils/api";
-import { redirect } from "next/navigation";
 import PageLoadAnimation from "../../components/PageLoadAnimation";
 
 const EachNote = () => {
@@ -20,10 +19,12 @@ const EachNote = () => {
       enabled: !!query?.id,
       onError: ({ response }) => {
         if (response?.status === 404) {
-          redirect("/login");
+          push("/404");
+          return;
         }
         alert(response?.data?.message);
       },
+      retry: (_, { response }) => response?.status !== 404,
     }
   );
 
