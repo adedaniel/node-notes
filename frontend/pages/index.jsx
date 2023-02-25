@@ -7,6 +7,7 @@ import classNames from "classnames";
 import debounce from "lodash.debounce";
 import { getNotes } from "../utils/api";
 import PageLoadAnimation from "../components/PageLoadAnimation";
+import Nav from "../components/Nav";
 
 const Index = () => {
   const [showFeatured, setShowFeatured] = useState(false);
@@ -27,6 +28,7 @@ const Index = () => {
 
   return (
     <div className="w-full flex justify-center py-10 px-[5%] pt-40">
+      <Nav />
       <div className="max-w-4xl w-full">
         <h1 className="text-center text-7xl mb-8 font-extrabold">Notes</h1>
 

@@ -12,7 +12,6 @@ export default function LoginPage() {
 
   const { isLoading, mutate } = useMutation(loginUser, {
     onSuccess: (data) => {
-      console.log(data);
       Router.push("/");
     },
     onError: ({ response }) => {

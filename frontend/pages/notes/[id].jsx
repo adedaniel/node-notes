@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import { getNoteDetails, updateNote } from "../../utils/api";
 import PageLoadAnimation from "../../components/PageLoadAnimation";
+import Nav from "../../components/Nav";
 
 const EachNote = () => {
   const queryClient = useQueryClient();
@@ -63,6 +64,8 @@ const EachNote = () => {
 
   return (
     <div className="w-full flex justify-center py-10 px-[5%] pt-20">
+      <Nav />
+
       <div className="max-w-2xl w-full">
         <Link
           href="/"

@@ -2,6 +2,7 @@ import Router from "next/router";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { addNote } from "../../utils/api";
+import Nav from "../../components/Nav";
 
 export default function NewNote() {
   const [title, setTitle] = useState("");
@@ -23,6 +24,8 @@ export default function NewNote() {
 
   return (
     <div className="w-full flex justify-center py-10 px-[5%] pt-20">
+      <Nav />
+
       <form onSubmit={handleSubmitNote} className="max-w-2xl w-full">
         <h1 className="text-4xl mb-12 font-extrabold">Add Note</h1>
 

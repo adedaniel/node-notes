@@ -14,7 +14,6 @@ export default function RegisterPage() {
 
   const { isLoading, mutate } = useMutation(registerUser, {
     onSuccess: (data) => {
-      console.log(data);
       Router.push("/");
     },
     onError: ({ response }) => {
