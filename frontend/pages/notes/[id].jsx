@@ -6,7 +6,7 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import { getNoteDetails, updateNote } from "../../utils/api";
-import PageLoadAnimation from "../../components/PageLoadAnimation";
+import Loader from "../../components/Loader";
 import Nav from "../../components/Nav";
 
 const EachNote = () => {
@@ -59,7 +59,7 @@ const EachNote = () => {
   };
 
   if (!note) {
-    return <PageLoadAnimation />;
+    return <Loader fullPage />;
   }
 
   return (

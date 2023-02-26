@@ -6,7 +6,7 @@ import { AiOutlineStar } from "react-icons/ai";
 import classNames from "classnames";
 import debounce from "lodash.debounce";
 import { getNotes } from "../utils/api";
-import PageLoadAnimation from "../components/PageLoadAnimation";
+import Loader from "../components/Loader";
 import Nav from "../components/Nav";
 
 const Index = () => {
@@ -20,10 +20,15 @@ const Index = () => {
     [query]
   );
 
-  const { data: notes } = useQuery(["notes", showFeatured, query], getNotes);
+  const { isLoading: isInitiallyLoading } = useQuery(["notes"], getNotes);
 
-  if (!notes) {
-    return <PageLoadAnimation />;
+  const { data: notes, isFetching } = useQuery(
+    ["notes", showFeatured, query],
+    getNotes
+  );
+
+  if (isInitiallyLoading) {
+    return <Loader fullPage />;
   }
 
   return (
@@ -66,7 +71,7 @@ const Index = () => {
             >
               <IoMdAdd className="text-6xl font-light text-gray-400" />
             </Link>
-            {notes.map(({ _id, title, content }) => (
+            {notes?.map(({ _id, title, content }) => (
               <Link
                 key={_id}
                 href={`/notes/${_id}`}
@@ -78,6 +83,8 @@ const Index = () => {
             ))}
           </div>
         </div>
+
+        {isFetching && <Loader className="py-10" />}
       </div>
     </div>
   );
